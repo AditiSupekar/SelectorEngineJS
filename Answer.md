@@ -76,3 +76,21 @@ var $ = function (selector) {
 
   return elements;
 }
+
+Answer F $("div#some_id.some_class") - Should return 1 DIV
+
+var $ = function (selector) {
+
+  var elements = [];
+
+  if (selector.includes('#') && selector.includes('.')) {
+    res = selector.split(/[#.]/);
+    x = document.getElementsByTagName(res[0]);
+    for (var i = 0; i < x.length; i++) {
+      if (x[i].className.includes(res[2])) {
+        elements.push(x[i]);
+      }
+    }
+  }
+  return elements;
+}
