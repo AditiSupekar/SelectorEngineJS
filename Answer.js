@@ -11,19 +11,33 @@
 // }
 
 // Answer B $("img.some_class") - Should return 1 IMG
+// var $ = function (selector) {
+//   var elements = [];
+
+//   var str = selector;
+//   var res = str.split(".");
+
+//   var x = document.getElementsByTagName(res[0]);
+//   if (res.length > 1) {
+//     for (var i = 0; i < x.length; i++) {
+//       if ( x[i].className.includes(res[1]) ){
+//         elements.push(x[i]);
+//       }
+//     } 
+//   }
+//   return elements;
+// }
+
+//Answer C ("#some_id") - Should return 1 DIV
 var $ = function (selector) {
   var elements = [];
+ 
+  if (selector.charAt(0) === '#') {
 
-  var str = selector;
-  var res = str.split(".");
+    res = selector.split('#')
 
-  var x = document.getElementsByTagName(res[0]);
-  if (res.length > 1) {
-    for (var i = 0; i < x.length; i++) {
-      if ( x[i].className.includes(res[1]) ){
-        elements.push(x[i]);
-      }
-    } 
+    var x = document.getElementById(res[1]);
+    elements.push(x);
   }
   return elements;
 }
