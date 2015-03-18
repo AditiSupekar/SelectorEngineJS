@@ -42,6 +42,22 @@ var $ = function (selector) {
   return elements;
 }
 
+Answer D $(".some_class") - Should return 1 DIV and 1 IMG
+
+var $ = function (selector) {
+
+  var elements = [];
+
+  if (selector.charAt(0) === '.') {
+    res = selector.split('.')
+    var x = document.getElementsByClassName(res[1]);
+    for (var i = 0; i < x.length; i++) {
+      elements.push(x[i]);
+    }
+  }
+  return elements;
+}
+
 Answer E $("input#some_id") - Should return an empty array
 var $ = function (selector) {
   var elements = [];
