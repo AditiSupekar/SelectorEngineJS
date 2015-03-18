@@ -87,10 +87,27 @@ var $ = function (selector) {
     res = selector.split(/[#.]/);
     x = document.getElementsByTagName(res[0]);
     for (var i = 0; i < x.length; i++) {
-      if (x[i].className.includes(res[2])) {
+      if (x[i].id.includes(res[1]) && x[i].className.includes(res[2])) {
         elements.push(x[i]);
       }
     }
   }
+  return elements;
+}
+
+Answer G ("div.some_class#some_id") - Should return 1 DIV
+
+var $ = function (selector) {
+
+  var elements = [];
+
+  res = selector.split(/[#.]/);
+  x = document.getElementsByTagName(res[0]);
+  for (var i = 0; i < x.length; i++) {
+    if (x[i].className.includes(res[1]) && x[i].id.includes(res[2])) {
+      elements.push(x[i]);
+    }
+  }
+
   return elements;
 }
