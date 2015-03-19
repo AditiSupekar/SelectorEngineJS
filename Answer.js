@@ -1,64 +1,64 @@
 var $ = function (selector) {
   var elements = [];
   
-  var selectorNew = selector.split(/[#.]/);
-
-  var tagVar = document.getElementsByTagName(selectorNew[0]);
-  var idVar = document.getElementById(selectorNew[1]);
-  var classVar = document.getElementsByClassName(selectorNew[1]);
-
+  var selectorArray = selector.split(/[#.]/);
   var selectorParts = selector.split(/(?=[#\.])/);
 
-  var selectorId = selector.charAt(0) === '#';
-  var selectorClass = selector.charAt(0) === '.';
-  var selectorTag = !selectorId && !selectorClass;
+  var selectorId = getSelectorId(selectorParts); // may be undefined
+  var selectorClass = getSelectorClass(selectorParts); // may be undefined
 
-  var getSelectorId = function() {
-    for (var i = 0; i < selectorParts.length; i++) {
-      if (selectorParts[i].charAt(0) === '#') {
-        return selectorParts[i].substring(1, selectorParts[i].length);
-      }
-    }
+  if (selector.charAt(0) === '#') {
+    var tag = document.getElementById(selectorArray[1]);
+    if (tag !== undefined) { elements.push(tag); }
+  }
+  else if (selector.charAt(0) === '.') { 
+    var tags = document.getElementsByClassName(selectorArray[1]);
+    selectAllElements(tags, elements); 
+  }
+  else {
+    var tags = document.getElementsByTagName(selectorArray[0]);
+    if (selectorArray.length === 1) { selectAllElements(tags, elements); }
+    else if (selectorArray.length === 2) { selectByClassAndOrId(selectorId, selectorClass, tags, false, elements); }
+    else if (selectorArray.length === 3) { selectByClassAndOrId(selectorId, selectorClass, tags, true, elements); }
   }
 
-  var getSelectorClass = function() {
-    for (var i = 0; i < selectorParts.length; i++) {
-      if (selectorParts[i].charAt(0) === '.') {
-        return selectorParts[i].substring(1, selectorParts[i].length);
-      }
+  return elements;
+};
+
+var getSelectorId = function(selectorParts) {
+  for (var i = 0; i < selectorParts.length; i++) {
+    if (selectorParts[i].charAt(0) === '#') {
+      return selectorParts[i].substring(1, selectorParts[i].length);
     }
   }
+};
 
-  var addAllElementsFromArrayToNewArray = function(array) {
-    for (var i = 0; i < array.length; i++) {
+var getSelectorClass = function(selectorParts) {
+  for (var i = 0; i < selectorParts.length; i++) {
+    if (selectorParts[i].charAt(0) === '.') {
+      return selectorParts[i].substring(1, selectorParts[i].length);
+    }
+  }
+};
+
+var selectAllElements = function(array, elements) {
+  for (var i = 0; i < array.length; i++) {
+    elements.push(array[i]);
+  }
+};
+
+var matchesIdClass = function(idMatches, classMatches, matchBoth) {
+  return (matchBoth && idMatches && classMatches) ||
+         (!matchBoth && (idMatches || classMatches));
+};
+
+var selectByClassAndOrId = function(selectorId, selectorClass, array, matchBoth, elements) {
+  for (var i = 0; i < array.length; i++) {
+    var classParts = array[i].className.split(" ");
+    var idMatches = selectorId !== undefined && array[i].id === selectorId;
+    var classMatches = classParts !== undefined && classParts.indexOf(selectorClass) !== -1;
+    if (matchesIdClass(idMatches, classMatches, matchBoth)) {
       elements.push(array[i]);
     }
   }
-
-  var selectByClassAndOrId = function(sid, sclass, array, match_both) {
-    for (var i = 0; i < array.length; i++) {
-      classParts = array[i].className.split(" ");
-      id_matches = sid != undefined && array[i].id === sid;
-      class_matches = classParts != undefined && classParts.indexOf(sclass) !== -1;
-      if ((match_both && id_matches && class_matches) ||
-          (!match_both && (id_matches || class_matches))) {
-        elements.push(array[i]);
-      }
-    }
-  }
-
-  var sid = getSelectorId(); // may be undefined
-  var sclass = getSelectorClass(); // may be undefined
-
-  if (selectorTag) {
-    if (selectorNew.length === 1) { addAllElementsFromArrayToNewArray(tagVar); }
-    else if (selectorNew.length === 2) { selectByClassAndOrId(sid, sclass, tagVar, false); }
-    else if (selectorNew.length === 3) { selectByClassAndOrId(sid, sclass, tagVar, true); }
-  }
-  else if (selectorId) {
-    if (idVar != undefined) { elements.push(idVar); }
-  }
-  else if (selectorClass) { addAllElementsFromArrayToNewArray(classVar); }
-
-  return elements;
 };
