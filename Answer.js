@@ -45,17 +45,12 @@ var $ = function (selector) {
     } 
   }
 
-  var addElementsWithClassAndIdFromArrayToNewArray = function(array) {
+  var selectByClassAndId = function(sid, sclass, array) {
     for (var i = 0; i < array.length; i++) {
-      if (selector.includes('.') && selector.includes('#')) {
-        attributeId = array[i].getAttribute('id');
-        attributeClass = array[i].getAttribute('class');
-        if (attributeClass != undefined) {
-          attributeClassNew = attributeClass.split(' '); // could have more than two class values
-          if (selector.includes(attributeId) && (selector.includes(attributeClassNew[0]) || selector.includes(attributeClassNew[1]))) {
-            elements.push(array[i]);
-          }
-        }
+      classParts = array[i].className.split(" ");
+      if ((sid != undefined && array[i].id === sid) && 
+        (classParts != undefined && classParts.indexOf(sclass) !== -1)) {
+        elements.push(array[i]);
       }
     }
   }
@@ -66,7 +61,7 @@ var $ = function (selector) {
   if (selectorTag) {
     if (selectorNew.length === 1) { addAllElementsFromArrayToNewArray(tagVar); }
     else if (selectorNew.length === 2) { selectByClassOrId(sid, sclass, tagVar); }
-    else if (selectorNew.length === 3) { addElementsWithClassAndIdFromArrayToNewArray(tagVar); }
+    else if (selectorNew.length === 3) { selectByClassAndId(sid, sclass, tagVar); }
   }
   else if (selectorId) {
     if (idVar != undefined) { elements.push(idVar); }
