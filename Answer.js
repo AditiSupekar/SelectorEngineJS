@@ -20,6 +20,21 @@ var $ = function (selector) {
         }
       } 
     }
+
+    else if (selectorNew.length === 3) {
+      for (var i = 0; i < tagVar.length; i++) {
+        if (selector.includes('.') && selector.includes('#')) {
+          attributeId = tagVar[i].getAttribute('id');
+          attributeClass = tagVar[i].getAttribute('class');
+          if (attributeClass != undefined) {
+            attributeClassNew = attributeClass.split(' ');
+            if (selector.includes(attributeId) && (selector.includes(attributeClassNew[0]) || selector.includes(attributeClassNew[1]))) {
+              elements.push(tagVar[i]);
+            }
+          }
+        }
+      }
+    }
   }
   else if (selectorId) {
     var idVar = document.getElementById(selectorNew[1]);
