@@ -35,21 +35,13 @@ var $ = function (selector) {
     }
   }
 
-  var selectByClassOrId = function(sid, sclass, array) {
+  var selectByClassAndOrId = function(sid, sclass, array, match_both) {
     for (var i = 0; i < array.length; i++) {
       classParts = array[i].className.split(" ");
-      if ((classParts != undefined && classParts.indexOf(sclass) !== -1) ||
-          (sid != undefined && array[i].id === sid)) {
-        elements.push(array[i]);
-      }
-    } 
-  }
-
-  var selectByClassAndId = function(sid, sclass, array) {
-    for (var i = 0; i < array.length; i++) {
-      classParts = array[i].className.split(" ");
-      if ((sid != undefined && array[i].id === sid) && 
-        (classParts != undefined && classParts.indexOf(sclass) !== -1)) {
+      id_matches = sid != undefined && array[i].id === sid;
+      class_matches = classParts != undefined && classParts.indexOf(sclass) !== -1;
+      if ((match_both && id_matches && class_matches) ||
+          (!match_both && (id_matches || class_matches))) {
         elements.push(array[i]);
       }
     }
@@ -60,8 +52,8 @@ var $ = function (selector) {
 
   if (selectorTag) {
     if (selectorNew.length === 1) { addAllElementsFromArrayToNewArray(tagVar); }
-    else if (selectorNew.length === 2) { selectByClassOrId(sid, sclass, tagVar); }
-    else if (selectorNew.length === 3) { selectByClassAndId(sid, sclass, tagVar); }
+    else if (selectorNew.length === 2) { selectByClassAndOrId(sid, sclass, tagVar, false); }
+    else if (selectorNew.length === 3) { selectByClassAndOrId(sid, sclass, tagVar, true); }
   }
   else if (selectorId) {
     if (idVar != undefined) { elements.push(idVar); }
