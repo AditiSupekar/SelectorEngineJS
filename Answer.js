@@ -1,54 +1,63 @@
 var $ = function (selector) {
   var elements = [];
   
-  selectorNew = selector.split(/[#.]/);
-  selectorId = selector.charAt(0) === '#';
-  selectorClass = selector.charAt(0) === '.';
-  selectorTag = !selectorId && !selectorClass;
+  var selectorNew = selector.split(/[#.]/);
 
-  if (selectorTag) {
-    var tagVar = document.getElementsByTagName(selectorNew[0]);
-    if (selectorNew.length === 1) {
-      for (var i = 0; i < tagVar.length; i++) {
-        elements.push(tagVar[i]);
+  var tagVar = document.getElementsByTagName(selectorNew[0]);
+  var idVar = document.getElementById(selectorNew[1]);
+  var classVar = document.getElementsByClassName(selectorNew[1]);
+
+  var selectorId = selector.charAt(0) === '#';
+  var selectorClass = selector.charAt(0) === '.';
+  var selectorTag = !selectorId && !selectorClass;
+
+  var addAllElementsFromArrayToNewArray = function(array) {
+    for (var i = 0; i < array.length; i++) {
+      elements.push(array[i]);
+    }
+  }
+
+  var addElementsWithClassOrIdFromArrayToNewArray = function(array) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i].className.includes(selectorNew[1]) || array[i].id.includes(selectorNew[1])){
+        elements.push(array[i]);
       }
-    }
-    else if (selectorNew.length === 2) {
-      for (var i = 0; i < tagVar.length; i++) {
-        if (tagVar[i].className.includes(selectorNew[1]) || tagVar[i].id.includes(selectorNew[1])){
-          elements.push(tagVar[i]);
-        }
-      } 
-    }
+    } 
+  }
 
-    else if (selectorNew.length === 3) {
-      for (var i = 0; i < tagVar.length; i++) {
-        if (selector.includes('.') && selector.includes('#')) {
-          attributeId = tagVar[i].getAttribute('id');
-          attributeClass = tagVar[i].getAttribute('class');
-          if (attributeClass != undefined) {
-            attributeClassNew = attributeClass.split(' ');
-            if (selector.includes(attributeId) && (selector.includes(attributeClassNew[0]) || selector.includes(attributeClassNew[1]))) {
-              elements.push(tagVar[i]);
-            }
+  var addElementsWithClassAndIdFromArrayToNewArray = function(array) {
+    for (var i = 0; i < array.length; i++) {
+      if (selector.includes('.') && selector.includes('#')) {
+        attributeId = array[i].getAttribute('id');
+        attributeClass = array[i].getAttribute('class');
+        if (attributeClass != undefined) {
+          attributeClassNew = attributeClass.split(' ');
+          if (selector.includes(attributeId) && (selector.includes(attributeClassNew[0]) || selector.includes(attributeClassNew[1]))) {
+            elements.push(array[i]);
           }
         }
       }
     }
   }
+
+  if (selectorTag) {
+    if (selectorNew.length === 1) {
+      addAllElementsFromArrayToNewArray(tagVar);
+    }
+    else if (selectorNew.length === 2) {
+      addElementsWithClassOrIdFromArrayToNewArray(tagVar);
+    }
+    else if (selectorNew.length === 3) {
+      addElementsWithClassAndIdFromArrayToNewArray(tagVar);
+    }
+  }
   else if (selectorId) {
-    var idVar = document.getElementById(selectorNew[1]);
     if (idVar != undefined) {
       elements.push(idVar);
     }
   }
-
   else if (selectorClass) {
-    var classVar = document.getElementsByClassName(selectorNew[1]);
-    for (var i = 0; i < classVar.length; i++) {
-      elements.push(classVar[i]);
-    }
+    addAllElementsFromArrayToNewArray(classVar);
   }
-
   return elements;
 };
