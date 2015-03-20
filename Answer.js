@@ -1,17 +1,17 @@
 var $ = function (selector) {
   var elements = [];
   
-  var selectorArray = selector.split(/[#.]/);
-  var selectorParts = selector.split(/(?=[#\.])/);
+  var selectorArray = selector.split(/[#.]/); // selector parts without delimiters
+  var selectorParts = selector.split(/(?=[#\.])/); // selector parts with delimiters
 
   var selectorId = getSelectorId(selectorParts); // may be undefined
   var selectorClass = getSelectorClass(selectorParts); // may be undefined
 
-  if (selector.charAt(0) === '#') {
+  if (selectorHasOnlyId(selector)) {
     var tag = document.getElementById(selectorArray[1]);
     if (tag !== undefined) { elements.push(tag); }
   }
-  else if (selector.charAt(0) === '.') { 
+  else if (selectorHasOnlyClass(selector)) { 
     var tags = document.getElementsByClassName(selectorArray[1]);
     selectAllElements(tags, elements); 
   }
@@ -21,8 +21,15 @@ var $ = function (selector) {
     else if (selectorArray.length === 2) { selectByClassAndOrId(selectorId, selectorClass, tags, false, elements); }
     else if (selectorArray.length === 3) { selectByClassAndOrId(selectorId, selectorClass, tags, true, elements); }
   }
-
   return elements;
+};
+
+var selectorHasOnlyId = function(selector) {
+  return selector.charAt(0) === '#';
+};
+
+var selectorHasOnlyClass = function(selector) {
+  return selector.charAt(0) === '.';
 };
 
 var getSelectorId = function(selectorParts) {
