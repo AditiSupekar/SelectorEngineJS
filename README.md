@@ -1,8 +1,8 @@
-# JavaScript Selection Engine
+# JavaScript Selector Engine
 
 ## Task
 
-Create a JavaScript selection engine (i.e. a JavaScript function that will return DOM elements given a CSS selector).
+Create a JavaScript selector engine (i.e. a JavaScript function that will return DOM elements given a CSS selector).
 - You cannot use JavaScript libraries or document.querySelector/document.querySelectorAll.
 - You should only modify and submit Answer.js file.
 - Your function should return an array of DOM elements that match the CSS selector.
@@ -25,6 +25,7 @@ The following calls to your function will be made:
 ## My approach to solving the test
 
 I have approach this test by making the following baby steps:
+
 1. Write an individual solution to each single call.
 2. Write a function that includes all the individual solutions.
 3. Refactor and fix bugs.
